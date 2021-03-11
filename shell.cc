@@ -34,12 +34,12 @@ void new_file() {
     std::string tmp1 = "";
 	std::cout << "Voer een bestandsnaam in en druk op enter: "; 
 	std::getline(std::cin, tmp1);
-	const char* bestandsnaam[] = {tmp1};
+	const char* bestandsnaam[] = {tmp1.c_str()};
 	int fd = syscall(SYS_creat, bestandsnaam[0], 0644);
 	std::cout << "Voer nu de inhoud van text bestand in, sluit af met EOF: " << std::endl; 
     std::string text_file_str;
     while(std::getline(std::cin, tmp)) {
-          if(tmp == "EOF") {
+          if(tmp == "<EOF>") {
             break;
           }
           text_file_str += tmp + "\n";
@@ -61,8 +61,8 @@ void list()
 }
 
 void find() // ToDo: Implementeer volgens specificatie.
-{
-    std::cout << "Voer in waarop je wilt filteren: " << std::endl;
+{   
+    std::cout << "Voer in waar je op wilt filteren: " << std::endl;
     std::string input_find = "";
     std::getline(std::cin, input_find);
     int fd[2];
@@ -92,15 +92,15 @@ void find() // ToDo: Implementeer volgens specificatie.
 
 void seek() // ToDo: Implementeer volgens specificatie.
 {
-    int fd = syscall(SYS_creat, "seek.txt", 0755);
+    int fd = syscall(SYS_creat, "seek", 0755);
     char byte[1] = {'x'};
     char byte1[1] = {'\0'};
     syscall(SYS_write, fd, byte, 1);
-    syscall(SYS_lseek, fd, 5000000, 0);
+    syscall(SYS_lseek, fd, 5000000, 1);
     syscall(SYS_write, fd, byte, 1);  
-    int fd1 = syscall(SYS_creat, "loop.txt", 0755);
+    int fd1 = syscall(SYS_creat, "loop", 0755);
     syscall(SYS_write, fd1, byte, 1);
-    for(int i = 0; i <= 5000000; i++) {
+    for(int i = 0; i < 5000000; i++) {
         syscall(SYS_write, fd1, byte1, 1);
     }
     syscall(SYS_write, fd1, byte, 1);
